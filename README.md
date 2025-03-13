@@ -20,6 +20,8 @@ A comprehensive application to manage courses, developed with Microsoft technolo
 - Manage course details
 - Add, edit, and delete courses
 - Track course enrollment
+- Send Email notification for enrollment
+- Cookies to track the sessions.
 
 ## Setup:
 1. Clone the repository.
