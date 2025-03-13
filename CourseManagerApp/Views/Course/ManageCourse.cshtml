@@ -1,0 +1,122 @@
+﻿@using System;
+@using System.ComponentModel;
+
+@using System.Globalization;
+@using CourseManagerApp.Entities
+
+@model CourseViewModel
+@{
+    ViewData["Title"] = "Manage your course";
+    static string GetEnumDescription(Enum value)
+    {
+        string description = string.Empty;
+        switch (value)
+        {
+            case EnrollmentStatus.ConfirmationMessageNotSent:
+                description = "Enrollment confirmation not sent";
+                break;
+            case EnrollmentStatus.ConfirmationMessageSent:
+                description = "Enrollment confirmation sent";
+                break;
+            case EnrollmentStatus.EnrollmentConfirmed:
+                description = "Enrollment confirmed";
+                break;
+            case EnrollmentStatus.EnrollmentDeclined:
+                description = "Enrollment declined";
+                break;
+            default:
+                break;
+        }
+        return description;
+    }
+}
+
+<div class="conatiner">
+    <div class="row">
+        <div class="col-md-12">
+            <a asp-controller="Course" asp-action="Items">All courses</a>
+            <span class="mx-1">|</span>
+            <a asp-controller="Course" asp-action="Edit" asp-route-id="@Model.Course.CourseId">Edit this course</a>
+            <span class="mx-1">|</span>
+            <a asp-controller="Course" asp-action="Create" class="text-success">Add new course</a>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <h6>Course summary:</h6>
+            <br />
+            <p>The course "@Model.Course.Name" is in room @Model.Course.RoomNumber starting on @Model.Course.StartDate.Value.ToString("MM/dd/yyy", CultureInfo.InvariantCulture) and the instructor is "@Model.Course.Instructor".</p>
+            <p>
+                Invites not sent: @Model.EmailNotSentCount&nbsp;&nbsp;
+                Sent count: @Model.EmailSentCount&nbsp;&nbsp;
+                Confirmed Count: @Model.EnrollmentConfirmedCount&nbsp;&nbsp;
+                Declined Count: @Model.EnrollmentDeclinedCount&nbsp;&nbsp;
+            </p>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="row mt-3">
+                <h6>Students:</h6>
+                <br />
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Enrollment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Course.Students != null && Model.Course.Students.Any())
+                        {
+                            @foreach (Student student in Model.Course.Students)
+                            {
+                                <tr>
+                                    <td>@student.Name</td>
+                                    <td><a href="mailto:@student.Email">@student.Email</a></td>
+                                    <td>@GetEnumDescription(@student.EnrollmentStatus)</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <form asp-controller="Course" asp-action="CreateStudent" asp-route-id="@Model.Course.CourseId" method="post"
+                  enctype="application/x-www-form-urlencoded" class="row mt-3">
+                <input type="hidden" asp-for="@Model.Course.CourseId" />
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                <div class="col-sm-4">
+                    <div class="form-group row">
+                        <label asp-for="@Model.NewStudent.Name" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" asp-for="@Model.NewStudent.Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group row">
+                        <label asp-for="@Model.NewStudent.Email" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="email" asp-for="@Model.NewStudent.Email">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <button type="submit" class="btn btn-primary mb-2">Create student</button>
+                </div>
+            </form>
+            <div class="row mt-3">
+                <h6>Actions:</h6>
+                <br />
+                <div class="col-sm-5">
+                    <form asp-controller="Course" asp-action="SendConfirmation" asp-route-id="@Model.Course.CourseId" method="post"
+                          enctype="application/x-www-form-urlencoded">
+                        <button type="submit" class="btn btn-primary mb-2">Send confirmation messages</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

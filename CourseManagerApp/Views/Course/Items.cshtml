@@ -1,0 +1,42 @@
+﻿@using CourseManagerApp.Entities
+@using System.Globalization
+@model List<Course>
+@{
+    ViewData["Title"] = "All Courses";
+}
+
+<div class="conatiner">
+    
+    <p>
+        <a asp-controller="Course" asp-action="Create" class="text-success">Add a new course</a>
+    </p>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Instructor</th>
+                <th>Start Date</th>
+                <th>Room #</th>
+                <th># of students</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Course course in Model)
+            {
+                <tr>
+                    <td>@course.Name</td>
+                    <td>@course.Instructor</td>
+                    <td>@course.StartDate.Value.ToString("MM/dd/yyy hh:mm:ss tt", CultureInfo.InvariantCulture)</td>
+                    <td>@course.RoomNumber</td>
+                    <td>@course.Students?.Count</td>
+                    <td>
+                        <a asp-controller="Course" asp-action="ManageCourse" asp-route-id="@course.CourseId">Manage</a>
+                        <span class="mx-1">|</span>
+                        <a asp-controller="Course" asp-action="Edit" asp-route-id="@course.CourseId">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
