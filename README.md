@@ -13,7 +13,6 @@ A comprehensive application to manage courses, developed with Microsoft technolo
 - **Entity Framework Core**
 - **HTML5**
 - **CSS**
-- **JavaScript**
 - **Microsoft SQL Server**
 
 ## Features:
